@@ -1,0 +1,1163 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Margin</title>
+<style>
+  :root{
+    --bg:#F7F8F9;
+    --surface:#FFFFFF;
+    --surface-2:#F2F4F6;
+    --ink:#14181C;
+    --ink-2:#5B6670;
+    --ink-3:#8B959E;
+    --line:#E1E5E9;
+    --line-strong:#C9D0D6;
+    --accent:#3E6B8C;
+    --accent-ink:#FFFFFF;
+    --accent-soft:#E9EFF4;
+    --gain:#2A6A4E;
+    --loss:#A63E2E;
+    --warn:#8A6320;
+    --warn-soft:#F6EFE0;
+    --row-gain:#F1F8F4;
+    --row-loss:#FDF4F2;
+    --shadow:0 1px 2px rgba(20,24,28,.05);
+
+    --font-display:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+    --font-body:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,Roboto,sans-serif;
+    --font-num:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#111417;
+      --surface:#181C20;
+      --surface-2:#1F242A;
+      --ink:#E9EDF0;
+      --ink-2:#A0AAB3;
+      --ink-3:#717C86;
+      --line:#272D34;
+      --line-strong:#39424B;
+      --accent:#7FAAC9;
+      --accent-ink:#101519;
+      --accent-soft:#1B2630;
+      --gain:#5CB58E;
+      --loss:#E0836F;
+      --warn:#D8AE63;
+      --warn-soft:#2A2517;
+      --row-gain:#151F1A;
+      --row-loss:#231A18;
+      --shadow:none;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#111417;
+    --surface:#181C20;
+    --surface-2:#1F242A;
+    --ink:#E9EDF0;
+    --ink-2:#A0AAB3;
+    --ink-3:#717C86;
+    --line:#272D34;
+    --line-strong:#39424B;
+    --accent:#7FAAC9;
+    --accent-ink:#101519;
+    --accent-soft:#1B2630;
+    --gain:#5CB58E;
+    --loss:#E0836F;
+    --warn:#D8AE63;
+    --warn-soft:#2A2517;
+    --row-gain:#151F1A;
+    --row-loss:#231A18;
+    --shadow:none;
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--font-body);
+    font-size:15px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:26px 20px 60px}
+
+  /* ---------- Kopf ---------- */
+  .masthead{display:flex;flex-wrap:wrap;align-items:flex-end;gap:14px 22px;padding-bottom:16px;border-bottom:1px solid var(--line-strong)}
+  .brand{display:flex;flex-direction:column;gap:1px;margin-right:auto}
+  .brand h1{font-family:var(--font-display);font-size:29px;line-height:1.1;font-weight:600;margin:0;letter-spacing:-.012em}
+  .brand p{margin:0;color:var(--ink-2);font-size:13.5px}
+  .headctl{display:flex;flex-direction:column;gap:5px}
+  .headctl label{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+
+  nav.tabs{display:flex;gap:2px;margin:0 0 24px;border-bottom:1px solid var(--line)}
+  nav.tabs button{
+    appearance:none;background:none;border:0;border-bottom:2px solid transparent;
+    padding:11px 15px;font:inherit;font-weight:500;color:var(--ink-2);cursor:pointer;margin-bottom:-1px;
+  }
+  nav.tabs button:hover{color:var(--ink)}
+  nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent);font-weight:600}
+  nav.tabs button .cnt{color:var(--ink-3);font-family:var(--font-num);font-size:12px;margin-left:6px}
+
+  /* ---------- Bausteine ---------- */
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:5px;box-shadow:var(--shadow)}
+  .eyebrow{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+  h2.sec{font-family:var(--font-display);font-size:20px;font-weight:600;margin:0;letter-spacing:-.01em}
+  .num{font-family:var(--font-num);font-variant-numeric:tabular-nums}
+  .pos{color:var(--gain)}
+  .neg{color:var(--loss)}
+  .muted{color:var(--ink-2)}
+
+  button,select,input{font:inherit;color:inherit}
+  .btn{
+    appearance:none;background:var(--surface);color:var(--ink);border:1px solid var(--line-strong);
+    border-radius:4px;padding:7px 13px;cursor:pointer;font-size:13.5px;font-weight:500;
+  }
+  .btn:hover{border-color:var(--ink-3)}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
+  .btn.primary:hover{filter:brightness(1.08)}
+  .btn.ghost{border-color:transparent;background:none;color:var(--ink-2);padding:5px 8px}
+  .btn.ghost:hover{color:var(--ink);background:var(--surface-2)}
+  .btn.danger:hover{color:var(--loss);border-color:var(--loss)}
+  :is(button,select,input,a):focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  input[type=text],input[type=date],select{
+    background:var(--surface);border:1px solid var(--line-strong);border-radius:4px;
+    padding:7px 9px;font-size:14px;width:100%;
+  }
+  input.money{font-family:var(--font-num);text-align:right}
+  input:hover,select:hover{border-color:var(--ink-3)}
+
+  .chip{
+    display:inline-block;font-size:11px;font-weight:600;letter-spacing:.02em;
+    padding:2.5px 7px;border-radius:3px;white-space:nowrap;
+    background:var(--surface-2);color:var(--ink-2);border:1px solid var(--line);
+  }
+  .chip.resale{background:var(--accent-soft);color:var(--accent);border-color:transparent}
+  .chip.flip,.chip.tax{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+
+  /* ---------- Übersicht ---------- */
+  .scopebar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:16px}
+  .seg{display:inline-flex;border:1px solid var(--line-strong);border-radius:4px;overflow:hidden}
+  .seg button{appearance:none;background:var(--surface);border:0;padding:7px 14px;font-size:13.5px;cursor:pointer;color:var(--ink-2)}
+  .seg button+button{border-left:1px solid var(--line-strong)}
+  .seg button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent);font-weight:600}
+
+  .standcard{padding:22px 24px;display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 28px;margin-bottom:12px}
+  .standcard .big{font-family:var(--font-num);font-variant-numeric:tabular-nums;font-size:43px;line-height:1;font-weight:600;letter-spacing:-.02em}
+  .standcard .lab{display:flex;flex-direction:column;gap:3px}
+  .standcard .expl{color:var(--ink-2);font-size:13px;max-width:36ch;margin:0}
+
+  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(176px,1fr));gap:10px;margin-bottom:12px}
+  .tile{padding:14px 15px;display:flex;flex-direction:column;gap:5px}
+  .tile .v{font-family:var(--font-num);font-variant-numeric:tabular-nums;font-size:21px;font-weight:600;letter-spacing:-.01em}
+  .tile .sub{font-size:12px;color:var(--ink-3)}
+
+  .taxcard{padding:18px 20px;display:flex;flex-wrap:wrap;gap:16px 26px;align-items:center}
+  .taxcard .col{display:flex;flex-direction:column;gap:4px;min-width:150px}
+  .taxcard .col .v{font-family:var(--font-num);font-variant-numeric:tabular-nums;font-size:24px;font-weight:600}
+  .meter{flex:1 1 210px;min-width:180px;display:flex;flex-direction:column;gap:6px}
+  .meter .track{height:7px;background:var(--surface-2);border:1px solid var(--line);border-radius:99px;overflow:hidden}
+  .meter .fill{height:100%;background:var(--accent);border-radius:99px;transition:width .3s ease}
+  .meter .fill.over{background:var(--loss)}
+  .meter .cap{font-size:12px;color:var(--ink-2)}
+
+  .ratecard{padding:20px 22px;display:flex;flex-direction:column;gap:14px;margin-bottom:12px}
+  .rate-head{display:flex;flex-wrap:wrap;gap:18px 32px;align-items:flex-start}
+  .rate-main{display:flex;flex-direction:column;gap:5px;flex:1 1 220px;min-width:200px}
+  .rate-big{font-family:var(--font-num);font-variant-numeric:tabular-nums;font-size:38px;line-height:1;font-weight:600;letter-spacing:-.02em}
+  .rate-say{font-size:13.5px;color:var(--ink-2);max-width:42ch}
+  .rate-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:14px 22px;flex:2 1 400px}
+  .rate-item{display:flex;flex-direction:column;gap:2px}
+  .rate-item .k{font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+  .rate-item .v{font-family:var(--font-num);font-variant-numeric:tabular-nums;font-size:18px;font-weight:600;white-space:nowrap}
+  .rate-item .s{font-size:11.5px;color:var(--ink-3)}
+  .rate-proj{margin:0;font-size:12.5px;color:var(--ink-3);line-height:1.55;border-top:1px solid var(--line);padding-top:13px;max-width:82ch}
+
+  .note{font-size:12.5px;color:var(--ink-3);line-height:1.55;margin:14px 2px 0;max-width:76ch}
+
+  /* ---------- Tabellen ---------- */
+  .tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:5px;background:var(--surface);box-shadow:var(--shadow)}
+  table{border-collapse:collapse;width:100%;min-width:680px}
+  th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}
+  thead th{
+    font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);font-weight:600;
+    background:var(--surface-2);white-space:nowrap;position:sticky;top:0;
+  }
+  th.r,td.r{text-align:right}
+  /* Einkaufsliste auf einen Blick: verkauft = Geld ist zurueck, im Bestand = Geld liegt fest */
+  tbody tr.zeile-verkauft{background:var(--row-gain)}
+  tbody tr.zeile-bestand{background:var(--row-loss)}
+  tbody tr:hover{background:var(--surface-2)}
+  tfoot td{font-weight:600;background:var(--surface-2);border-bottom:0;border-top:1px solid var(--line-strong)}
+  td.money,th.money{font-family:var(--font-num);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+  td.acts{text-align:right;white-space:nowrap}
+  td.name{font-weight:500}
+  /* Chip und Betrag als eine Einheit auf gemeinsamer Mittelachse — sonst bricht
+     das "€" in die naechste Zeile und die Zahl sitzt versetzt zum Chip. */
+  .statuscell{display:flex;align-items:center;gap:7px;white-space:nowrap}
+  .statuscell .betrag{font-family:var(--font-num);font-variant-numeric:tabular-nums;font-size:12.5px;white-space:nowrap}
+  td .brandline{display:block;font-size:12px;color:var(--ink-3);font-weight:400}
+
+  .quickadd{display:grid;grid-template-columns:130px minmax(150px,1fr) 118px 112px 148px auto;gap:8px;align-items:end;padding:14px;margin-bottom:14px}
+  .quickadd .f{display:flex;flex-direction:column;gap:4px}
+  @media (max-width:860px){ .quickadd{grid-template-columns:1fr 1fr} }
+
+  .sechead{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;margin:0 2px 12px}
+  .sechead .sp{margin-left:auto;display:flex;gap:8px}
+
+  .empty{padding:36px 24px;text-align:center;color:var(--ink-2)}
+  .empty p{margin:0 auto 14px;max-width:46ch}
+
+  /* ---------- Dialog ---------- */
+  dialog{
+    border:1px solid var(--line-strong);border-radius:6px;background:var(--surface);color:var(--ink);
+    padding:0;width:min(560px,calc(100vw - 32px));box-shadow:0 18px 48px rgba(8,12,16,.28);
+  }
+  dialog::backdrop{background:rgba(12,16,20,.5)}
+  .dlg-head{padding:18px 22px 12px;border-bottom:1px solid var(--line)}
+  .dlg-head h3{font-family:var(--font-display);font-size:19px;margin:0;font-weight:600}
+  .dlg-body{padding:18px 22px;display:flex;flex-direction:column;gap:16px;max-height:66vh;overflow-y:auto}
+  .dlg-foot{padding:14px 22px;border-top:1px solid var(--line);display:flex;gap:8px;justify-content:flex-end;background:var(--surface-2)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+  @media (max-width:520px){ .grid2,.grid3{grid-template-columns:1fr} }
+  .f{display:flex;flex-direction:column;gap:4px}
+  .f label,.quickadd .f label{font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+  label.mini{
+    display:flex;align-items:center;gap:6px;margin-top:5px;
+    font-size:12px;letter-spacing:0;text-transform:none;color:var(--ink-2);font-weight:400;cursor:pointer;
+  }
+  label.mini input{width:14px;height:14px;accent-color:var(--accent);margin:0}
+  input:disabled{background:var(--surface-2);color:var(--ink-3);cursor:not-allowed}
+  fieldset{border:0;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
+  fieldset>legend{
+    font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);font-weight:600;
+    padding:0 0 6px;margin-bottom:2px;border-bottom:1px solid var(--line);width:100%;
+  }
+  .sellswitch{display:flex;align-items:center;gap:9px;font-size:14px}
+  .sellswitch input{width:16px;height:16px;accent-color:var(--accent)}
+  .liveprofit{font-family:var(--font-num);font-variant-numeric:tabular-nums;font-size:15px;font-weight:600}
+
+  /* ---------- Fuß ---------- */
+  .datafoot{margin-top:28px;padding-top:16px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .datafoot .spacer{margin-left:auto}
+  .savestate{font-size:12.5px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+  .banner{padding:11px 14px;border-radius:4px;background:var(--warn-soft);color:var(--warn);font-size:13px;margin-bottom:16px}
+  .toast{
+    position:fixed;left:50%;bottom:24px;transform:translateX(-50%);
+    background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:4px;font-size:13.5px;
+    box-shadow:0 8px 26px rgba(8,12,16,.3);opacity:0;pointer-events:none;transition:opacity .2s ease;z-index:50;
+  }
+  .toast.on{opacity:1}
+  [hidden]{display:none !important}
+  @media (prefers-reduced-motion: reduce){ *{transition:none !important} }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="masthead">
+    <div class="brand">
+      <h1>Margin</h1>
+      <p>Was du kaufst, was du verkaufst, was übrig bleibt.</p>
+    </div>
+    <div class="headctl">
+      <label for="yearSel">Zeitraum</label>
+      <select id="yearSel"></select>
+    </div>
+    <div class="headctl">
+      <label for="themeBtn">Ansicht</label>
+      <button class="btn" id="themeBtn" type="button">System</button>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button role="tab" id="tab-uebersicht" aria-selected="true" data-view="uebersicht">Übersicht</button>
+    <button role="tab" id="tab-einkaeufe" aria-selected="false" data-view="einkaeufe">Einkäufe <span class="cnt" id="cntBuy"></span></button>
+    <button role="tab" id="tab-verkaeufe" aria-selected="false" data-view="verkaeufe">Verkäufe <span class="cnt" id="cntSell"></span></button>
+  </nav>
+
+  <div class="banner" id="localWarn" hidden>
+    Der Server läuft gerade nicht — die Einträge liegen nur im Browser-Speicher dieses Fensters.
+    Starte <code>python3 server.py</code>, damit alles in <strong>daten.json</strong> gesichert wird.
+  </div>
+
+  <div class="banner" id="recoverWarn" hidden>
+    Im Speicher dieses Browsers liegen <strong id="recoverN"></strong> Einträge,
+    in daten.json stehen nur <strong id="recoverM"></strong>.
+    <button class="btn" id="recoverBtn" type="button" style="margin-left:8px">Browser-Stand übernehmen</button>
+  </div>
+
+  <!-- ============ ÜBERSICHT ============ -->
+  <section id="view-uebersicht" role="tabpanel" aria-labelledby="tab-uebersicht">
+    <div class="scopebar">
+      <span class="eyebrow">Rechnen mit</span>
+      <div class="seg" id="scopeSeg">
+        <button data-scope="all" aria-pressed="true">Allem</button>
+        <button data-scope="resale" aria-pressed="false">Nur Weiterverkauf</button>
+      </div>
+      <span class="muted" id="scopeHint" style="font-size:13px"></span>
+    </div>
+
+    <div class="card standcard">
+      <div class="lab">
+        <span class="eyebrow">Wo du stehst</span>
+        <span class="big num" id="standValue">—</span>
+      </div>
+      <p class="expl" id="standExpl"></p>
+    </div>
+
+    <div class="tiles">
+      <div class="card tile"><span class="eyebrow">Ausgegeben</span><span class="v num" id="tOut">—</span><span class="sub" id="tOutSub"></span></div>
+      <div class="card tile"><span class="eyebrow">Eingenommen</span><span class="v num" id="tIn">—</span><span class="sub" id="tInSub"></span></div>
+      <div class="card tile"><span class="eyebrow">Gewinn verkaufte Teile</span><span class="v num" id="tProfit">—</span><span class="sub" id="tProfitSub"></span></div>
+      <div class="card tile"><span class="eyebrow">Noch im Bestand</span><span class="v num" id="tStock">—</span><span class="sub" id="tStockSub"></span></div>
+      <div class="card tile"><span class="eyebrow">Für dich behalten</span><span class="v num" id="tKept">—</span><span class="sub" id="tKeptSub"></span></div>
+    </div>
+
+    <div class="card ratecard">
+      <div class="rate-head">
+        <div class="rate-main">
+          <span class="eyebrow">Wie dein Weiterverkauf läuft</span>
+          <span class="rate-big" id="rFaktor">—</span>
+          <span class="rate-say" id="rSay"></span>
+        </div>
+        <div class="rate-grid" id="rGrid"></div>
+      </div>
+      <p class="rate-proj" id="rProj"></p>
+    </div>
+
+    <div class="card taxcard">
+      <div class="col">
+        <span class="eyebrow">Steuerrelevanter Gewinn</span>
+        <span class="v num" id="taxSum">—</span>
+        <span class="muted" style="font-size:12px" id="taxCount"></span>
+      </div>
+      <div class="meter">
+        <div class="track"><div class="fill" id="taxFill" style="width:0%"></div></div>
+        <span class="cap" id="taxCap"></span>
+      </div>
+    </div>
+
+    <p class="note" id="scopeNote"></p>
+  </section>
+
+  <!-- ============ EINKÄUFE ============ -->
+  <section id="view-einkaeufe" role="tabpanel" aria-labelledby="tab-einkaeufe" hidden>
+    <form class="card quickadd" id="quickForm">
+      <div class="f"><label for="qDate">Kaufdatum · leer = unbekannt</label><input type="date" id="qDate"></div>
+      <div class="f"><label for="qName">Teil</label><input type="text" id="qName" placeholder="z. B. Jeansjacke" required></div>
+      <div class="f"><label for="qBrand">Marke</label><input type="text" id="qBrand" placeholder="optional"></div>
+      <div class="f"><label for="qPrice">Einkaufspreis</label><input type="text" inputmode="decimal" class="money" id="qPrice" placeholder="0,00" required></div>
+      <div class="f"><label for="qPurpose">Gekauft</label>
+        <select id="qPurpose">
+          <option value="resale">zum Weiterverkauf</option>
+          <option value="private">für mich</option>
+        </select>
+      </div>
+      <button class="btn primary" type="submit">Eintragen</button>
+    </form>
+
+    <div class="sechead">
+      <h2 class="sec">Einkäufe</h2>
+      <span class="muted" id="buySubtitle" style="font-size:13px"></span>
+    </div>
+
+    <div class="tablewrap" id="buyWrap">
+      <table>
+        <thead><tr>
+          <th>Datum</th><th>Teil</th><th>Gekauft</th>
+          <th class="money">Einkauf</th><th>Status</th><th class="r">&nbsp;</th>
+        </tr></thead>
+        <tbody id="buyBody"></tbody>
+        <tfoot id="buyFoot"></tfoot>
+      </table>
+    </div>
+    <div class="empty" id="buyEmpty" hidden>
+      <p>Noch keine Einkäufe erfasst. Trag oben das erste Teil ein — Datum, Name, Preis, fertig.</p>
+    </div>
+  </section>
+
+  <!-- ============ VERKÄUFE ============ -->
+  <section id="view-verkaeufe" role="tabpanel" aria-labelledby="tab-verkaeufe" hidden>
+    <div class="sechead">
+      <h2 class="sec">Verkäufe</h2>
+      <span class="muted" id="sellSubtitle" style="font-size:13px"></span>
+      <span class="sp"><button class="btn" id="ownSaleBtn" type="button">Eigenes Teil verkauft</button></span>
+    </div>
+
+    <div class="tablewrap" id="sellWrap">
+      <table>
+        <thead><tr>
+          <th>Verkauft am</th><th>Teil</th><th>Wo</th>
+          <th class="money">Einkauf</th><th class="money">Verkauf</th>
+          <th class="money">Kosten</th><th class="money">Gewinn</th>
+          <th>Gehalten</th><th class="r">&nbsp;</th>
+        </tr></thead>
+        <tbody id="sellBody"></tbody>
+        <tfoot id="sellFoot"></tfoot>
+      </table>
+    </div>
+    <div class="empty" id="sellEmpty" hidden>
+      <p>Noch nichts verkauft in diesem Zeitraum. Verkäufe trägst du bei einem Einkauf über „Verkaufen“ ein — oder hier oben, wenn das Teil vorher schon dir gehörte.</p>
+    </div>
+  </section>
+
+  <div class="datafoot">
+    <button class="btn" id="exportBtn" type="button">Sicherung speichern</button>
+    <button class="btn" id="importBtn" type="button">Sicherung laden</button>
+    <button class="btn" id="csvBtn" type="button">Als Tabelle (CSV)</button>
+    <input type="file" id="importFile" accept="application/json,.json" hidden>
+    <span class="spacer"></span>
+    <span class="savestate" id="saveState"></span>
+    <button class="btn ghost danger" id="wipeBtn" type="button">Alles löschen</button>
+  </div>
+</div>
+
+<!-- ============ DIALOG ============ -->
+<dialog id="dlg">
+  <form method="dialog" id="dlgForm">
+    <div class="dlg-head"><h3 id="dlgTitle">Teil bearbeiten</h3></div>
+    <div class="dlg-body">
+      <fieldset>
+        <legend>Einkauf</legend>
+        <div class="f"><label for="fName">Teil</label><input type="text" id="fName" required></div>
+        <div class="grid3">
+          <div class="f"><label for="fBrand">Marke</label><input type="text" id="fBrand"></div>
+          <div class="f" id="wrapBuyDate">
+            <label for="fBuyDate">Kaufdatum</label>
+            <input type="date" id="fBuyDate">
+            <label class="mini"><input type="checkbox" id="fNoDate"> weiß ich nicht</label>
+          </div>
+          <div class="f" id="wrapBuyPrice">
+            <label for="fBuyPrice">Einkaufspreis</label>
+            <input type="text" inputmode="decimal" class="money" id="fBuyPrice" placeholder="0,00">
+          </div>
+        </div>
+        <div class="f"><label for="fPurpose">Gekauft</label>
+          <select id="fPurpose">
+            <option value="resale">zum Weiterverkauf</option>
+            <option value="private">für mich</option>
+            <option value="own">gehörte mir schon (kein Einkauf)</option>
+          </select>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Verkauf</legend>
+        <label class="sellswitch"><input type="checkbox" id="fSold"> Dieses Teil ist verkauft</label>
+        <div id="sellFields" hidden>
+          <div class="grid3" style="margin-bottom:10px">
+            <div class="f"><label for="fSellDate">Verkauft am</label><input type="date" id="fSellDate"></div>
+            <div class="f"><label for="fSellPrice">Verkaufspreis</label><input type="text" inputmode="decimal" class="money" id="fSellPrice" placeholder="0,00"></div>
+            <div class="f"><label for="fPlatform">Plattform</label>
+              <select id="fPlatform">
+                <option>Vinted</option><option>eBay</option><option>Vestiaire</option>
+                <option>Kleinanzeigen</option><option>Andere</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid2" style="margin-bottom:10px">
+            <div class="f"><label for="fFees">Gebühren</label><input type="text" inputmode="decimal" class="money" id="fFees" placeholder="0,00"></div>
+            <div class="f"><label for="fShip">Versand, den du zahlst</label><input type="text" inputmode="decimal" class="money" id="fShip" placeholder="0,00"></div>
+          </div>
+          <p class="muted" style="margin:0;font-size:13px">Ergebnis: <span class="liveprofit" id="livePro">—</span></p>
+        </div>
+      </fieldset>
+
+      <div class="f"><label for="fNote">Notiz</label><input type="text" id="fNote" placeholder="optional"></div>
+    </div>
+    <div class="dlg-foot">
+      <button class="btn" type="button" id="dlgCancel">Abbrechen</button>
+      <button class="btn primary" type="submit">Speichern</button>
+    </div>
+  </form>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------------- Ansicht hell/dunkel ---------------- */
+  const THEME_KEY = "bestand.theme";
+  const THEMES = [
+    {v:"system", t:"System"},
+    {v:"light",  t:"Hell"},
+    {v:"dark",   t:"Dunkel"}
+  ];
+  function applyTheme(v){
+    if(v === "system") document.documentElement.removeAttribute("data-theme");
+    else document.documentElement.setAttribute("data-theme", v);
+    const cur = THEMES.find(x => x.v === v) || THEMES[0];
+    document.getElementById("themeBtn").textContent = cur.t;
+    try{ localStorage.setItem(THEME_KEY, v); }catch(e){}
+  }
+  let themeVal = "system";
+  try{ themeVal = localStorage.getItem(THEME_KEY) || "system"; }catch(e){}
+  applyTheme(themeVal);
+  document.getElementById("themeBtn").addEventListener("click", () => {
+    const i = THEMES.findIndex(x => x.v === themeVal);
+    themeVal = THEMES[(i+1) % THEMES.length].v;
+    applyTheme(themeVal);
+  });
+
+  /* ---------------- Speichern ---------------- */
+  const API = "api/daten";
+  const LOCAL_KEY = "bestand.v1";
+  let backend = "api";
+  let items = [];
+  let saveTimer = null;
+
+  function setState(txt){ document.getElementById("saveState").textContent = txt; }
+
+  function lokalerStand(){
+    try{
+      const d = JSON.parse(localStorage.getItem(LOCAL_KEY) || "[]");
+      return Array.isArray(d) ? d : [];
+    }catch(e){ return []; }
+  }
+
+  async function loadData(){
+    const lokal = lokalerStand();
+    try{
+      const r = await fetch(API, {cache:"no-store"});
+      if(!r.ok) throw new Error("http " + r.status);
+      const data = await r.json();
+      items = Array.isArray(data) ? data : [];
+      backend = "api";
+      setState("Daten aus daten.json");
+      /* Nie stillschweigend den kleineren Stand gewinnen lassen: liegt im Browser mehr,
+         wird gefragt, statt zu ueberschreiben. */
+      if(lokal.length > items.length){
+        document.getElementById("recoverN").textContent = lokal.length;
+        document.getElementById("recoverM").textContent = items.length;
+        document.getElementById("recoverWarn").hidden = false;
+        document.getElementById("recoverBtn").onclick = () => {
+          if(!confirm("Die " + lokal.length + " Einträge aus dem Browser-Speicher übernehmen und nach daten.json schreiben?")) return;
+          items = lokal;
+          document.getElementById("recoverWarn").hidden = true;
+          save(); render(); toast("Übernommen");
+        };
+      }
+    }catch(e){
+      backend = "local";
+      document.getElementById("localWarn").hidden = false;
+      items = lokal;
+      setState("nur im Browser-Speicher");
+    }
+  }
+
+  function save(){
+    clearTimeout(saveTimer);
+    setState("speichert …");
+    saveTimer = setTimeout(doSave, 300);
+  }
+  /* Immer beides: erst der Server, zusaetzlich der Browser-Speicher als Netz.
+     Laeuft der Server wieder, faengt die Seite von selbst wieder an, in die Datei zu schreiben. */
+  async function doSave(){
+    const text = JSON.stringify(items);
+    let ok = false;
+    try{
+      const r = await fetch(API, {method:"PUT", headers:{"Content-Type":"application/json"}, body:text});
+      ok = r.ok;
+    }catch(e){ ok = false; }
+    try{ localStorage.setItem(LOCAL_KEY, text); }catch(e){}
+    if(ok){
+      backend = "api"; offen = false;
+      document.getElementById("localWarn").hidden = true;
+      setState("gespeichert · daten.json");
+    }else{
+      backend = "local"; offen = true;
+      document.getElementById("localWarn").hidden = false;
+      setState("nur im Browser gesichert — Server läuft nicht");
+    }
+  }
+
+  /* Solange etwas noch nicht in der Datei steht, wird es alle 15 Sekunden erneut
+     versucht. Ein Fenster, das seit Stunden offen ist, holt den Rueckstand damit
+     von selbst nach, sobald der Server wieder da ist. */
+  let offen = false;
+  setInterval(() => { if(offen) doSave(); }, 15000);
+
+  /* ---------------- Zahlen & Daten ---------------- */
+  const nf = new Intl.NumberFormat("de-DE",{minimumFractionDigits:2,maximumFractionDigits:2});
+  function toCents(v){
+    if(v === null || v === undefined) return 0;
+    if(typeof v === "number") return Math.round(v*100);
+    let s = String(v).trim();
+    if(!s) return 0;
+    s = s.replace(/[^\d.,-]/g,"");
+    if(s.indexOf(",") > -1 && s.indexOf(".") > -1) s = s.replace(/\./g,"").replace(",",".");
+    else if(s.indexOf(",") > -1) s = s.replace(",",".");
+    const n = parseFloat(s);
+    return isNaN(n) ? 0 : Math.round(n*100);
+  }
+  /* geschuetztes Leerzeichen: Betrag und € gehoeren zusammen und duerfen nie umbrechen */
+  const eur  = c => nf.format((c||0)/100) + " €";
+  const eurS = c => (c > 0 ? "+" : "") + nf.format((c||0)/100) + " €";
+  const cls  = c => c > 0 ? "pos" : (c < 0 ? "neg" : "");
+  const toInput = c => c ? String((c/100).toFixed(2)).replace(".",",") : "";
+  function deDate(iso){
+    if(!iso) return "—";
+    const p = String(iso).split("-");
+    return p.length === 3 ? p[2]+"."+p[1]+"."+p[0] : iso;
+  }
+  /* Datumszelle: ohne Datum steht dort "unbekannt", nicht ein nichtssagender Strich */
+  const dateCell = iso => iso
+    ? '<span class="num" style="white-space:nowrap">' + deDate(iso) + '</span>'
+    : '<span class="muted" style="white-space:nowrap">unbekannt</span>';
+  const yearOf = iso => iso ? Number(String(iso).slice(0,4)) : null;
+  function daysHeld(it){
+    if(!it.buyDate || !it.sellDate) return null;
+    const a = Date.parse(it.buyDate), b = Date.parse(it.sellDate);
+    if(isNaN(a) || isNaN(b)) return null;
+    return Math.round((b-a)/86400000);
+  }
+  const todayISO = () => {
+    const d = new Date(), p = n => String(n).padStart(2,"0");
+    return d.getFullYear() + "-" + p(d.getMonth()+1) + "-" + p(d.getDate());
+  };
+  const uid = () => "i" + Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+
+  const PURPOSE = {
+    resale:  {label:"Weiterverkauf",   chip:"resale"},
+    private: {label:"für mich",        chip:""},
+    own:     {label:"eigener Bestand", chip:""}
+  };
+  const netSale = it => (it.sellPrice||0) - (it.fees||0) - (it.shipping||0);
+  const profit  = it => netSale(it) - (it.buyPrice||0);
+  const isFlip  = it => it.purpose === "private" && it.sold;
+
+  function esc(s){
+    return String(s === null || s === undefined ? "" : s).replace(/[&<>"']/g, m =>
+      ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+  }
+
+  /* ---------------- Zustand ---------------- */
+  let view = "uebersicht";
+  let year = "all";
+  let scope = "all";
+
+  function inScope(it){
+    if(scope === "all") return true;
+    if(it.purpose === "resale") return true;
+    if(it.purpose === "private" && it.sold) return true;
+    return false;
+  }
+  const buyInYear  = it => year === "all" || yearOf(it.buyDate) === Number(year);
+  const sellInYear = it => year === "all" || yearOf(it.sellDate) === Number(year);
+
+  function totals(){
+    const t = {out:0,outPrivate:0,inGross:0,costs:0,profit:0,soldN:0,boughtN:0,
+               stock:0,stockN:0,kept:0,keptN:0,tax:0,taxN:0};
+    items.forEach(it => {
+      const s = inScope(it);
+      if(s && it.purpose !== "own" && buyInYear(it)){
+        t.out += it.buyPrice||0; t.boughtN++;
+        if(it.purpose === "private") t.outPrivate += it.buyPrice||0;
+      }
+      if(s && it.sold && sellInYear(it)){
+        t.inGross += it.sellPrice||0;
+        t.costs   += (it.fees||0) + (it.shipping||0);
+        t.profit  += profit(it);
+        t.soldN++;
+        const d = daysHeld(it);
+        if(d !== null && d <= 365 && it.purpose !== "own"){ t.tax += profit(it); t.taxN++; }
+      }
+      if(s && !it.sold && it.purpose === "resale"){ t.stock += it.buyPrice||0; t.stockN++; }
+      if(!it.sold && it.purpose === "private"){ t.kept += it.buyPrice||0; t.keptN++; }
+    });
+    t.inNet = t.inGross - t.costs;
+    t.stand = t.inNet - t.out;
+    return t;
+  }
+
+  /* ---------------- Bewertung: wie laeuft der Weiterverkauf ---------------- */
+  function median(arr){
+    if(!arr.length) return null;
+    const a = arr.slice().sort((x,y) => x-y), m = Math.floor(a.length/2);
+    return a.length % 2 ? a[m] : Math.round((a[m-1] + a[m]) / 2);
+  }
+  function bewertung(){
+    /* Nur Teile mit echtem Einkaufspreis. Eigener Altbestand hat keinen und wuerde
+       jede Spanne ins Unendliche ziehen. */
+    const verk = items.filter(it => it.sold && (it.buyPrice||0) > 0 && sellInYear(it));
+    const ek  = verk.reduce((a,it) => a + (it.buyPrice||0), 0);
+    const net = verk.reduce((a,it) => a + netSale(it), 0);
+    const bestand = items.filter(it => !it.sold && it.purpose === "resale");
+    return {
+      n: verk.length, ek, net,
+      faktor: ek ? net/ek : 0,
+      liege: median(verk.map(daysHeld).filter(d => d !== null)),
+      bestandN: bestand.length,
+      bestandEk: bestand.reduce((a,it) => a + (it.buyPrice||0), 0),
+      gekauft: verk.length + bestand.length
+    };
+  }
+
+  function renderRate(){
+    const b = bewertung();
+    const fEl = document.getElementById("rFaktor");
+    const say = document.getElementById("rSay");
+    const grid = document.getElementById("rGrid");
+    const proj = document.getElementById("rProj");
+
+    if(!b.n){
+      fEl.textContent = "—";
+      fEl.className = "rate-big";
+      say.textContent = "Sobald du das erste zugekaufte Teil verkaufst, steht hier eine Einschätzung.";
+      grid.innerHTML = "";
+      proj.textContent = "";
+      return;
+    }
+
+    const f = b.faktor;
+    fEl.textContent = f.toLocaleString("de-DE",{minimumFractionDigits:1,maximumFractionDigits:1}) + "×";
+    fEl.className = "rate-big " + (f >= 1 ? "pos" : "neg");
+
+    let satz;
+    if(f >= 3)        satz = "Das läuft stark — aus jedem Euro Einkauf wird ein Vielfaches.";
+    else if(f >= 2)   satz = "Das läuft gut, die Spanne trägt den Aufwand.";
+    else if(f >= 1.5) satz = "Das trägt sich, aber die Spanne ist dünn.";
+    else if(f > 1)    satz = "Da bleibt wenig hängen — deine Einkaufspreise liegen nah am Verkaufspreis.";
+    else              satz = "Du gibst mehr aus, als zurückkommt.";
+    if(b.n < 5) satz = "Erst " + b.n + (b.n === 1 ? " Verkauf" : " Verkäufe") +
+                       " — eine Tendenz, noch kein Urteil. " + satz;
+    say.textContent = satz;
+
+    const marge = Math.round((f - 1) * 100);
+    const zeilen = [
+      ["Spanne",    (marge > 0 ? "+" : "") + marge + " %",              "auf den Einkaufspreis"],
+      ["Liegezeit", b.liege === null ? "—" : b.liege + " Tage",         "typisch bis zum Verkauf"],
+      ["Verkauft",  b.n + " von " + b.gekauft,                          "der zugekauften Teile"],
+      ["Eingesetzt", eur(b.ek),                                         "wurden zu " + eur(b.net)]
+    ];
+    grid.innerHTML = zeilen.map(z =>
+      '<div class="rate-item"><span class="k">' + esc(z[0]) + '</span>' +
+      '<span class="v">' + esc(z[1]) + '</span>' +
+      '<span class="s">' + esc(z[2]) + '</span></div>').join("");
+
+    if(b.bestandN){
+      const erwartet = Math.round(b.bestandEk * f);
+      proj.textContent = "Hochrechnung: In deinen " + b.bestandN + " Teilen im Bestand stecken " +
+        eur(b.bestandEk) + " Einkauf. Zu deiner bisherigen Spanne wären das rund " + eur(erwartet) +
+        " Erlös, also etwa " + eur(erwartet - b.bestandEk) + " Gewinn. Gerechnet, nicht versprochen — " +
+        "Ladenhüter und Teile, die du doch behältst, ziehen die Zahl nach unten.";
+    }else{
+      proj.textContent = "Im Moment liegt nichts zum Weiterverkauf im Bestand.";
+    }
+  }
+
+  /* ---------------- Zeichnen ---------------- */
+  function renderYears(){
+    const sel = document.getElementById("yearSel");
+    const ys = new Set();
+    items.forEach(it => { const a=yearOf(it.buyDate), b=yearOf(it.sellDate); if(a) ys.add(a); if(b) ys.add(b); });
+    ys.add(new Date().getFullYear());
+    const list = Array.from(ys).sort((a,b)=>b-a);
+    const keep = year;
+    sel.innerHTML = '<option value="all">Alle Jahre</option>' +
+      list.map(y => '<option value="'+y+'">'+y+'</option>').join("");
+    sel.value = (keep === "all" || list.indexOf(Number(keep)) > -1) ? keep : "all";
+    year = sel.value;
+  }
+
+  function renderOverview(){
+    const t = totals();
+    const per = year === "all" ? "insgesamt" : "im Jahr " + year;
+
+    document.getElementById("scopeHint").textContent =
+      scope === "all" ? "inklusive der Teile, die du für dich gekauft hast"
+                      : "ohne die Teile, die du für dich behalten hast";
+
+    const sv = document.getElementById("standValue");
+    sv.textContent = eurS(t.stand);
+    sv.className = "big num " + cls(t.stand);
+    document.getElementById("standExpl").textContent = t.stand >= 0
+      ? "So viel mehr ist " + per + " reingekommen, als du ausgegeben hast. Was noch unverkauft im Schrank liegt, zählt hier nicht als Gewinn."
+      : "So viel steckt " + per + " noch drin. Das dreht sich, sobald der Bestand verkauft ist.";
+
+    document.getElementById("tOut").textContent = eur(t.out);
+    document.getElementById("tOutSub").textContent =
+      t.boughtN + (t.boughtN === 1 ? " Einkauf" : " Einkäufe") +
+      (scope === "all" && t.outPrivate ? " · davon " + eur(t.outPrivate) + " für dich" : "");
+
+    document.getElementById("tIn").textContent = eur(t.inNet);
+    document.getElementById("tInSub").textContent =
+      t.soldN + (t.soldN === 1 ? " Verkauf" : " Verkäufe") +
+      (t.costs ? " · nach " + eur(t.costs) + " Gebühren/Versand" : "");
+
+    const tp = document.getElementById("tProfit");
+    tp.textContent = eurS(t.profit);
+    tp.className = "v num " + cls(t.profit);
+    document.getElementById("tProfitSub").textContent =
+      t.soldN ? "Ø " + eurS(Math.round(t.profit/t.soldN)) + " pro Teil" : "noch nichts verkauft";
+
+    document.getElementById("tStock").textContent = eur(t.stock);
+    document.getElementById("tStockSub").textContent =
+      t.stockN + (t.stockN === 1 ? " Teil wartet" : " Teile warten") + " auf einen Käufer";
+
+    document.getElementById("tKept").textContent = eur(t.kept);
+    document.getElementById("tKeptSub").textContent =
+      t.keptN + (t.keptN === 1 ? " Teil" : " Teile") + " für dich · aktuell";
+
+    renderRate();
+
+    const LIMIT = 100000;
+    const ts = document.getElementById("taxSum");
+    ts.textContent = eurS(t.tax);
+    ts.className = "v num " + cls(t.tax);
+    document.getElementById("taxCount").textContent =
+      t.taxN + (t.taxN === 1 ? " Teil" : " Teile") + " binnen 12 Monaten weiterverkauft";
+    const pct = Math.max(0, Math.min(100, Math.round((t.tax/LIMIT)*100)));
+    const fill = document.getElementById("taxFill");
+    fill.style.width = pct + "%";
+    fill.className = "fill" + (t.tax >= LIMIT ? " over" : "");
+    document.getElementById("taxCap").textContent = t.tax >= LIMIT
+      ? "Über der 1.000-€-Freigrenze — dann ist der volle Betrag steuerpflichtig, nicht nur der Teil darüber."
+      : "Von der 1.000-€-Freigrenze pro Jahr sind " + pct + " % erreicht. Darunter bleibt der Gewinn steuerfrei.";
+
+    document.getElementById("scopeNote").innerHTML =
+      "<strong>Was hier mitzählt:</strong> „Nur Weiterverkauf“ rechnet mit den Teilen, die du zum Verkaufen gekauft hast — plus denen, die du eigentlich für dich gekauft, dann aber doch verkauft hast. Was du behältst, fällt raus. " +
+      "In die Steuerzeile zählt nur, was du innerhalb von zwölf Monaten nach dem Kauf wieder verkauft hast; eigener Altbestand ohne Einkauf bleibt außen vor. Das ist eine Orientierung, keine Steuerberatung.";
+  }
+
+  function statusCell(it){
+    if(it.sold){
+      const p = profit(it);
+      return '<div class="statuscell"><span class="chip">verkauft</span>' +
+             '<span class="betrag ' + cls(p) + '">' + eurS(p) + '</span></div>';
+    }
+    return '<div class="statuscell"><span class="chip">' +
+           (it.purpose === "private" ? "behalten" : "im Bestand") + '</span></div>';
+  }
+
+  function renderBuys(){
+    const alle = items.filter(it => it.purpose !== "own");
+    const rows = alle.filter(buyInYear)
+                     .sort((a,b) => String(b.buyDate||"").localeCompare(String(a.buyDate||"")));
+    const ohneDatum = alle.filter(it => !it.buyDate).length;
+    const body = document.getElementById("buyBody");
+    const foot = document.getElementById("buyFoot");
+
+    /* Teile ohne Kaufdatum lassen sich keinem Jahr zuordnen — sie stehen unter
+       "Alle Jahre", und in einer Jahresansicht wird gesagt, dass sie fehlen. */
+    document.getElementById("buySubtitle").textContent = year === "all"
+      ? "alle Jahre" + (ohneDatum ? " · " + ohneDatum + " ohne Kaufdatum" : "")
+      : "Kaufdatum im Jahr " + year +
+        (ohneDatum ? " · " + ohneDatum + " ohne Datum nur unter „Alle Jahre“" : "");
+    document.getElementById("buyEmpty").hidden = rows.length > 0;
+    document.getElementById("buyWrap").hidden  = rows.length === 0;
+    if(!rows.length){ body.innerHTML = ""; foot.innerHTML = ""; return; }
+
+    let sum = 0, sumP = 0;
+    body.innerHTML = rows.map(it => {
+      sum += it.buyPrice||0;
+      if(it.purpose === "private") sumP += it.buyPrice||0;
+      const p = PURPOSE[it.purpose] || PURPOSE.resale;
+      const farbe = it.sold ? " class=\"zeile-verkauft\""
+                  : (it.purpose === "resale" ? " class=\"zeile-bestand\"" : "");
+      return '<tr' + farbe + '>' +
+        '<td>' + dateCell(it.buyDate) + '</td>' +
+        '<td class="name">' + esc(it.name) +
+          (it.brand ? '<span class="brandline">' + esc(it.brand) + '</span>' : '') +
+          (it.note ? '<span class="brandline">' + esc(it.note) + '</span>' : '') + '</td>' +
+        '<td><span class="chip ' + p.chip + '">' + p.label + '</span>' +
+          (isFlip(it) ? ' <span class="chip flip">dann doch verkauft</span>' : '') + '</td>' +
+        '<td class="money">' + eur(it.buyPrice) + '</td>' +
+        '<td>' + statusCell(it) + '</td>' +
+        '<td class="acts">' +
+          (it.sold ? '' : '<button class="btn ghost" data-sell="' + it.id + '">Verkaufen</button>') +
+          '<button class="btn ghost" data-edit="' + it.id + '">Bearbeiten</button>' +
+          '<button class="btn ghost danger" data-del="' + it.id + '" title="Löschen">✕</button>' +
+        '</td></tr>';
+    }).join("");
+
+    foot.innerHTML = '<tr><td colspan="3">Summe · ' + rows.length +
+      (rows.length === 1 ? ' Einkauf' : ' Einkäufe') +
+      (sumP ? ' <span class="muted" style="font-weight:400">(davon ' + eur(sumP) + ' für dich)</span>' : '') +
+      '</td><td class="money">' + eur(sum) + '</td><td colspan="2"></td></tr>';
+  }
+
+  function renderSells(){
+    const rows = items.filter(it => it.sold && sellInYear(it))
+                      .sort((a,b) => String(b.sellDate||"").localeCompare(String(a.sellDate||"")));
+    const body = document.getElementById("sellBody");
+    const foot = document.getElementById("sellFoot");
+
+    document.getElementById("sellSubtitle").textContent =
+      year === "all" ? "alle Jahre" : "Verkaufsdatum im Jahr " + year;
+    document.getElementById("sellEmpty").hidden = rows.length > 0;
+    document.getElementById("sellWrap").hidden  = rows.length === 0;
+    if(!rows.length){ body.innerHTML = ""; foot.innerHTML = ""; return; }
+
+    let sB=0, sS=0, sC=0, sP=0;
+    body.innerHTML = rows.map(it => {
+      const c = (it.fees||0) + (it.shipping||0), p = profit(it), d = daysHeld(it);
+      sB += it.buyPrice||0; sS += it.sellPrice||0; sC += c; sP += p;
+      let held = '<span class="muted">—</span>';
+      if(d !== null) held = d <= 365
+        ? '<span class="chip tax">' + d + ' Tage</span>'
+        : '<span class="muted num">' + d + ' Tage</span>';
+      return '<tr>' +
+        '<td>' + dateCell(it.sellDate) + '</td>' +
+        '<td class="name">' + esc(it.name) +
+          (it.brand ? '<span class="brandline">' + esc(it.brand) + '</span>' : '') +
+          (isFlip(it) ? '<span class="brandline">war eigentlich für dich</span>' : '') + '</td>' +
+        '<td class="muted">' + esc(it.platform || "—") + '</td>' +
+        '<td class="money">' + (it.purpose === "own" ? '<span class="muted">—</span>' : eur(it.buyPrice)) + '</td>' +
+        '<td class="money">' + eur(it.sellPrice) + '</td>' +
+        '<td class="money">' + (c ? eur(c) : '<span class="muted">—</span>') + '</td>' +
+        '<td class="money ' + cls(p) + '">' + eurS(p) + '</td>' +
+        '<td>' + held + '</td>' +
+        '<td class="acts">' +
+          '<button class="btn ghost" data-edit="' + it.id + '">Bearbeiten</button>' +
+          '<button class="btn ghost danger" data-del="' + it.id + '" title="Löschen">✕</button>' +
+        '</td></tr>';
+    }).join("");
+
+    foot.innerHTML = '<tr><td colspan="3">Summe · ' + rows.length +
+      (rows.length === 1 ? ' Verkauf' : ' Verkäufe') + '</td>' +
+      '<td class="money">' + eur(sB) + '</td>' +
+      '<td class="money">' + eur(sS) + '</td>' +
+      '<td class="money">' + eur(sC) + '</td>' +
+      '<td class="money ' + cls(sP) + '">' + eurS(sP) + '</td>' +
+      '<td colspan="2"></td></tr>';
+  }
+
+  function render(){
+    renderYears();
+    document.getElementById("cntBuy").textContent  = items.filter(i => i.purpose !== "own").length || "";
+    document.getElementById("cntSell").textContent = items.filter(i => i.sold).length || "";
+    ["uebersicht","einkaeufe","verkaeufe"].forEach(v => {
+      document.getElementById("view-" + v).hidden = (v !== view);
+      document.getElementById("tab-" + v).setAttribute("aria-selected", String(v === view));
+    });
+    if(view === "uebersicht") renderOverview();
+    if(view === "einkaeufe")  renderBuys();
+    if(view === "verkaeufe")  renderSells();
+  }
+
+  /* ---------------- Dialog ---------------- */
+  const dlg = document.getElementById("dlg");
+  let editing = null;
+
+  function openDialog(item, opts){
+    opts = opts || {};
+    editing = item;
+    document.getElementById("dlgTitle").textContent = opts.title || "Teil bearbeiten";
+    document.getElementById("fName").value      = item.name || "";
+    document.getElementById("fBrand").value     = item.brand || "";
+    document.getElementById("fBuyDate").value   = item.buyDate || "";
+    document.getElementById("fBuyPrice").value  = toInput(item.buyPrice);
+    document.getElementById("fPurpose").value   = item.purpose || "resale";
+    document.getElementById("fSold").checked    = !!item.sold || !!opts.forceSell;
+    document.getElementById("fSellDate").value  = item.sellDate || (opts.forceSell ? todayISO() : "");
+    document.getElementById("fSellPrice").value = toInput(item.sellPrice);
+    document.getElementById("fFees").value      = toInput(item.fees);
+    document.getElementById("fShip").value      = toInput(item.shipping);
+    document.getElementById("fPlatform").value  = item.platform || "Vinted";
+    document.getElementById("fNote").value      = item.note || "";
+    document.getElementById("fNoDate").checked  = !item.buyDate;
+    syncBuy();
+    syncSell();
+    dlg.showModal();
+    (opts.forceSell ? document.getElementById("fSellPrice") : document.getElementById("fName")).focus();
+  }
+  /* Teile, die dir vorher schon gehoerten, haben weder Kaufdatum noch Einkaufspreis —
+     dann verschwinden beide Felder, statt eine Angabe zu verlangen, die es nicht gibt. */
+  function syncBuy(){
+    const own = document.getElementById("fPurpose").value === "own";
+    const noDate = document.getElementById("fNoDate");
+    const date = document.getElementById("fBuyDate");
+    document.getElementById("wrapBuyDate").hidden  = own;
+    document.getElementById("wrapBuyPrice").hidden = own;
+    if(own){ noDate.checked = true; date.value = ""; document.getElementById("fBuyPrice").value = ""; }
+    date.disabled = noDate.checked;
+    if(noDate.checked) date.value = "";
+    liveProfit();
+  }
+  function syncSell(){
+    const on = document.getElementById("fSold").checked;
+    document.getElementById("sellFields").hidden = !on;
+    if(on) liveProfit();
+  }
+  function liveProfit(){
+    const p = toCents(document.getElementById("fSellPrice").value)
+            - toCents(document.getElementById("fFees").value)
+            - toCents(document.getElementById("fShip").value)
+            - toCents(document.getElementById("fBuyPrice").value);
+    const el = document.getElementById("livePro");
+    el.textContent = eurS(p);
+    el.className = "liveprofit " + cls(p);
+  }
+  ["fSellPrice","fFees","fShip","fBuyPrice"].forEach(id =>
+    document.getElementById(id).addEventListener("input", liveProfit));
+  document.getElementById("fSold").addEventListener("change", syncSell);
+  document.getElementById("fNoDate").addEventListener("change", syncBuy);
+  document.getElementById("fPurpose").addEventListener("change", syncBuy);
+  document.getElementById("dlgCancel").addEventListener("click", () => { editing = null; dlg.close(); });
+
+  document.getElementById("dlgForm").addEventListener("submit", e => {
+    e.preventDefault();
+    if(!editing) return;
+    const it = editing;
+    it.name     = document.getElementById("fName").value.trim() || "Ohne Namen";
+    it.brand    = document.getElementById("fBrand").value.trim();
+    it.purpose  = document.getElementById("fPurpose").value;
+    const ohneDatum = document.getElementById("fNoDate").checked || it.purpose === "own";
+    it.buyDate  = ohneDatum ? "" : document.getElementById("fBuyDate").value;
+    it.buyPrice = it.purpose === "own" ? 0 : toCents(document.getElementById("fBuyPrice").value);
+    it.note     = document.getElementById("fNote").value.trim();
+    it.sold     = document.getElementById("fSold").checked;
+    if(it.sold){
+      it.sellDate  = document.getElementById("fSellDate").value || todayISO();
+      it.sellPrice = toCents(document.getElementById("fSellPrice").value);
+      it.fees      = toCents(document.getElementById("fFees").value);
+      it.shipping  = toCents(document.getElementById("fShip").value);
+      it.platform  = document.getElementById("fPlatform").value;
+    }else{
+      it.sellDate = ""; it.sellPrice = 0; it.fees = 0; it.shipping = 0;
+    }
+    if(items.indexOf(it) === -1) items.push(it);
+    editing = null;
+    save(); render(); dlg.close();
+    toast("Gespeichert");
+  });
+
+  /* ---------------- Bedienung ---------------- */
+  document.querySelectorAll("nav.tabs button").forEach(b =>
+    b.addEventListener("click", () => { view = b.dataset.view; render(); }));
+
+  document.getElementById("yearSel").addEventListener("change", e => { year = e.target.value; render(); });
+
+  document.getElementById("scopeSeg").addEventListener("click", e => {
+    const b = e.target.closest("button"); if(!b) return;
+    scope = b.dataset.scope;
+    document.querySelectorAll("#scopeSeg button").forEach(x =>
+      x.setAttribute("aria-pressed", String(x === b)));
+    renderOverview();
+  });
+
+  document.getElementById("quickForm").addEventListener("submit", e => {
+    e.preventDefault();
+    items.push({
+      id: uid(),
+      name: document.getElementById("qName").value.trim(),
+      brand: document.getElementById("qBrand").value.trim(),
+      buyDate: document.getElementById("qDate").value || todayISO(),
+      buyPrice: toCents(document.getElementById("qPrice").value),
+      purpose: document.getElementById("qPurpose").value,
+      sold:false, sellDate:"", sellPrice:0, fees:0, shipping:0, platform:"", note:""
+    });
+    save();
+    const keepDate = document.getElementById("qDate").value;
+    e.target.reset();
+    document.getElementById("qDate").value = keepDate;
+    document.getElementById("qName").focus();
+    render();
+    toast("Einkauf eingetragen");
+  });
+
+  document.body.addEventListener("click", e => {
+    const sell = e.target.closest("[data-sell]");
+    const edit = e.target.closest("[data-edit]");
+    const del  = e.target.closest("[data-del]");
+    if(sell){
+      const it = items.find(x => x.id === sell.dataset.sell);
+      if(it) openDialog(it, {title:"Verkauf eintragen", forceSell:true});
+    }else if(edit){
+      const it = items.find(x => x.id === edit.dataset.edit);
+      if(it) openDialog(it, {title:"Teil bearbeiten"});
+    }else if(del){
+      const it = items.find(x => x.id === del.dataset.del);
+      if(it && confirm('„' + it.name + '“ wirklich löschen?')){
+        items = items.filter(x => x.id !== it.id);
+        save(); render(); toast("Gelöscht");
+      }
+    }
+  });
+
+  document.getElementById("ownSaleBtn").addEventListener("click", () => {
+    openDialog({
+      id: uid(), name:"", brand:"", buyDate:"", buyPrice:0, purpose:"own",
+      sold:true, sellDate:todayISO(), sellPrice:0, fees:0, shipping:0, platform:"Vinted", note:""
+    }, {title:"Eigenes Teil verkauft", forceSell:true});
+  });
+
+  /* ---------------- Sichern & Ausgeben ---------------- */
+  function download(filename, text){
+    try{
+      const url = URL.createObjectURL(new Blob([text], {type:"text/plain;charset=utf-8"}));
+      const a = document.createElement("a");
+      a.href = url; a.download = filename;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      toast("In den Downloads gespeichert");
+    }catch(e){ toast("Speichern hat nicht geklappt"); }
+  }
+
+  document.getElementById("exportBtn").addEventListener("click", () =>
+    download("bestand-sicherung-" + todayISO() + ".json", JSON.stringify(items, null, 2)));
+
+  document.getElementById("csvBtn").addEventListener("click", () => {
+    const head = ["Kaufdatum","Teil","Marke","Gekauft","Einkauf","Verkauft am","Plattform","Verkauf","Gebuehren","Versand","Gewinn","Tage gehalten","Notiz"];
+    const q = v => '"' + String(v === null || v === undefined ? "" : v).replace(/"/g,'""') + '"';
+    const dec = c => ((c||0)/100).toFixed(2).replace(".",",");
+    const lines = [head.join(";")].concat(items.map(it => [
+      it.buyDate, it.name, it.brand, (PURPOSE[it.purpose]||{}).label,
+      dec(it.buyPrice), it.sellDate, it.platform, dec(it.sellPrice),
+      dec(it.fees), dec(it.shipping), it.sold ? dec(profit(it)) : "",
+      daysHeld(it) === null ? "" : daysHeld(it), it.note
+    ].map(q).join(";")));
+    download("bestand-" + todayISO() + ".csv", "﻿" + lines.join("\r\n"));
+  });
+
+  document.getElementById("importBtn").addEventListener("click", () =>
+    document.getElementById("importFile").click());
+
+  document.getElementById("importFile").addEventListener("change", e => {
+    const f = e.target.files && e.target.files[0];
+    if(!f) return;
+    const r = new FileReader();
+    r.onload = () => {
+      try{
+        const data = JSON.parse(r.result);
+        if(!Array.isArray(data)) throw new Error("kein Array");
+        if(items.length && !confirm("Die aktuellen " + items.length + " Einträge werden durch die Sicherung ersetzt. Fortfahren?")) return;
+        items = data.map(x => Object.assign({id:uid(), purpose:"resale", sold:false}, x));
+        save(); render(); toast("Sicherung geladen");
+      }catch(err){ toast("Die Datei ließ sich nicht lesen"); }
+    };
+    r.readAsText(f);
+    e.target.value = "";
+  });
+
+  document.getElementById("wipeBtn").addEventListener("click", () => {
+    if(!items.length) return;
+    if(confirm("Alle " + items.length + " Einträge löschen? Zurückholen geht nur über eine Sicherung.")){
+      items = []; save(); render(); toast("Alles gelöscht");
+    }
+  });
+
+  let toastTimer = null;
+  function toast(msg){
+    const el = document.getElementById("toast");
+    el.textContent = msg;
+    el.classList.add("on");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove("on"), 1900);
+  }
+
+  /* ---------------- Start ---------------- */
+  document.getElementById("qDate").value = todayISO();
+  loadData().then(render);
+})();
+</script>
+</body>
+</html>

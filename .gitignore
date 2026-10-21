@@ -1,0 +1,6 @@
+daten.json
+daten.json.tmp
+sicherungen/
+server.log
+.DS_Store
+__pycache__/
